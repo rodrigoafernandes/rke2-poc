@@ -1,0 +1,59 @@
+---
+# tasks file for haproxy_keepalived_conf
+- name: Install haproxy, keepalived and selinux libs
+  ansible.builtin.package:
+    name:
+      - haproxy
+      - keepalived
+      - libselinux-python3
+      - libsemanage-python3
+      - python3-libsemanage
+    state: latest
+
+- name: Set haproxy_connect_any on and keep it persistent across reboots
+  ansible.posix.seboolean:
+    name: haproxy_connect_any
+    state: true
+    persistent: true
+
+- name: Verify haproxy rsyslog conf
+  stat:
+    path: "/etc/rsyslog.d/haproxy.conf"
+  register: result_rsyslog_conf
+
+- name: Configure haproxy on rsyslog
+  ansible.builtin.copy:
+    src: haproxy.conf
+    dest: /etc/rsyslog.d/haproxy.conf
+  when: not result_rsyslog_conf.stat.exists
+
+- name: Configure HAProxy
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Configure keepalived
+  ansible.builtin.template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+
+- name: Enable rsyslog
+  ansible.builtin.systemd_service:
+    name: rsyslog
+    state: restarted
+    enabled: true
+
+- name: Enable haproxy
+  ansible.builtin.systemd_service:
+    name: haproxy
+    state: restarted
+    enabled: true
+
+- name: Enable keepalived
+  ansible.builtin.systemd_service:
+    name: keepalived
+    state: restarted
+    enabled: true

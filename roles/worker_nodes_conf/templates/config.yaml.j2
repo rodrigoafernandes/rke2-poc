@@ -1,0 +1,11 @@
+server: https://{{ haproxy_vip }}:9345
+token: {{ rke2_join_token }}
+tls-san:
+  - {{ haproxy_vip }}
+node-ip: {{ inventory_hostname }}
+node-label:
+  - "dedicated={{ node_label }}"
+{% if node_use_taint %}
+node-taint:
+  - "dedicated={{ node_label }}:NoSchedule"
+{% endif %}

@@ -1,0 +1,34 @@
+- hosts: haproxy_keepalived
+  remote_user: rkeoci
+  become: yes
+  name: Configure HAProxy and Keepalived
+  roles:
+    - haproxy_keepalived_conf
+
+- hosts: etcd_0
+  remote_user: rkeoci
+  become: yes
+  name: Configure ETCD-0 Node
+  roles:
+    - etcd_0_conf
+
+- hosts: etcd
+  remote_user: rkeoci
+  become: yes
+  name: Configure ETCD Cluster
+  roles:
+    - etcd_cluster_conf
+
+- hosts: control_plane
+  remote_user: rkeoci
+  become: yes
+  name: Configure Control Plane Cluster
+  roles:
+    - control_plane_cluster_conf
+
+- hosts: worker_nodes
+  remote_user: rkeoci
+  become: yes
+  name: Configure Worker Nodes
+  roles:
+    - worker_nodes_conf
