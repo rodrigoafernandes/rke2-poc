@@ -1,0 +1,30 @@
+---
+# tasks file for change_control_plane_health_check_to_l7_conf
+- name: Copy haproxy token file
+  ansible.builtin.copy:
+    src: "haproxy-api-server-token/192.168.56.80/etc/haproxy-api-server-token/haproxy-token"
+    dest: "/etc/haproxy"
+  when: rke2_state == "start"
+
+- name: Register token
+  ansible.builtin.command: cat /etc/haproxy/haproxy-token
+  register: haproxy_token
+  when: rke2_state == "start"
+
+- name: Change haproxy config to use l7 for kubernetes api-server
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: '0600'
+  vars:
+    haproxy_api_server_token: "{{ haproxy_token.stdout | quote }}"
+  when: rke2_state == "start"
+
+- name: Restart haproxy
+  ansible.builtin.systemd_service:
+    name: haproxy
+    state: restarted
+    enabled: true
+  when: rke2_state == "start"

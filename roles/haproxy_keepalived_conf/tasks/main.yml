@@ -16,6 +16,14 @@
     state: true
     persistent: true
 
+- name: Create haproxy dev dir
+  ansible.builtin.file:
+    path: /var/lib/haproxy/dev
+    group: haproxy
+    owner: haproxy
+    state: directory
+  when: rke2_state == "start"
+
 - name: Verify haproxy rsyslog conf
   stat:
     path: "/etc/rsyslog.d/haproxy.conf"
@@ -34,26 +42,31 @@
     owner: root
     group: root
     mode: '0600'
+  when: rke2_state == "start"
 
 - name: Configure keepalived
   ansible.builtin.template:
     src: keepalived.conf.j2
     dest: /etc/keepalived/keepalived.conf
+  when: rke2_state == "start"
 
 - name: Enable rsyslog
   ansible.builtin.systemd_service:
     name: rsyslog
     state: restarted
     enabled: true
+  when: rke2_state == "start"
 
 - name: Enable haproxy
   ansible.builtin.systemd_service:
     name: haproxy
     state: restarted
     enabled: true
+  when: rke2_state == "start"
 
 - name: Enable keepalived
   ansible.builtin.systemd_service:
     name: keepalived
     state: restarted
     enabled: true
+  when: rke2_state == "start"

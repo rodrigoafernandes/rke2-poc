@@ -66,7 +66,6 @@
   url: https://oracle.github.io/vagrant-projects/boxes/oraclelinux/9.json
   script: init.sh
 
-## scp -i projects/rancher-rke/keys/devsecops.pem rkeoci@192.168.56.70:/home/rkeoci/rke2-kubeconfig rke2-kubeconfig
 ## VIP 192.168.56.92
 ## Public Nginx Ingress Controller 192.168.56.93
 ## Private Nginx Ingress Controller 192.168.56.94

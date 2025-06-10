@@ -32,3 +32,17 @@
   name: Configure Worker Nodes
   roles:
     - worker_nodes_conf
+
+- hosts: 192.168.56.80
+  remote_user: rkeoci
+  become: yes
+  name: Configure HAProxy ServiceAccount
+  roles:
+    - create_haproxy_serviceaccount_conf
+
+- hosts: haproxy_keepalived
+  remote_user: rkeoci
+  become: yes
+  name: Configure HAProxy Health check to k8s api-server to l7
+  roles:
+    - change_control_plane_health_check_to_l7_conf

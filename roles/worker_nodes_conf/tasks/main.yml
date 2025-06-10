@@ -30,3 +30,4 @@
 
 - name: Label Worker node
   ansible.builtin.shell: /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2-kubeconfig label nodes {{ node_name }} node-role.kubernetes.io/worker=true --overwrite=true
+
