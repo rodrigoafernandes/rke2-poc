@@ -1,3 +1,5 @@
 keys
 .vagrant
 ansible_vault_pwd.txt
+rke2-kubeconfig
+haproxy-api-server-token
