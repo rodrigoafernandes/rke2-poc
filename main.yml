@@ -5,7 +5,8 @@
   roles:
     - haproxy_keepalived_conf
 
-- hosts: etcd_0
+- hosts: etcd
+  run_once: true
   remote_user: rkeoci
   become: yes
   name: Configure ETCD-0 Node
@@ -33,7 +34,8 @@
   roles:
     - worker_nodes_conf
 
-- hosts: 192.168.56.80
+- hosts: worker_nodes
+  run_once: true
   remote_user: rkeoci
   become: yes
   name: Configure HAProxy ServiceAccount

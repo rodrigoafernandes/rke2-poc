@@ -45,8 +45,14 @@
   when: not yq_installation_result.stat.exists
 
 - name: Change kubeconfig server to haproxy vip
-  ansible.builtin.shell: chmod +x /tmp/yq && /tmp/yq e -i '.clusters[0].cluster.server = "https://{{ haproxy_vip }}:6443"' /home/{{ ansible_user }}/rke2-kubeconfig
-    
+  ansible.builtin.shell: |
+    chmod +x /tmp/yq
+    /tmp/yq e -i '.clusters[0].cluster.server = "https://{{ haproxy_vip }}:6443"' /home/{{ ansible_user }}/rke2-kubeconfig
+    /tmp/yq e -i '.clusters[0].name = "{{ rke2_cluster_name }}"' /home/{{ ansible_user }}/rke2-kubeconfig
+    /tmp/yq e -i '.contexts[0].context.cluster = "{{ rke2_cluster_name }}"' /home/{{ ansible_user }}/rke2-kubeconfig
+    /tmp/yq e -i '.contexts[0].name = "{{ rke2_cluster_name }}"' /home/{{ ansible_user }}/rke2-kubeconfig
+    /tmp/yq e -i '.current-context = "{{ rke2_cluster_name }}"' /home/{{ ansible_user }}/rke2-kubeconfig
+
 - name: Fetch kubeconfig
   ansible.builtin.fetch:
     src: "/home/{{ ansible_user }}/rke2-kubeconfig"

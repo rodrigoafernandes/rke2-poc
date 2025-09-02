@@ -25,7 +25,7 @@
 
 - name: Copy kubeconfig
   ansible.builtin.copy:
-    src: "rke2-kubeconfig/192.168.56.70/home/{{ ansible_user }}/rke2-kubeconfig"
+    src: "rke2-kubeconfig/{{ groups['etcd'][0] }}/home/{{ ansible_user }}/rke2-kubeconfig"
     dest: "/etc/rancher/rke2"
 
 - name: Label Worker node

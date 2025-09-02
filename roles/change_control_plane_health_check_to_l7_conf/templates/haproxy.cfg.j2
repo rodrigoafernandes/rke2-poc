@@ -29,8 +29,9 @@ backend rke2-etcd
     mode tcp
     option tcp-check
     balance roundrobin
-    server etcd0 192.168.56.70:9345 check
-    server etcd1 192.168.56.71:9345 check
+{% for etcd_server in groups['etcd'] %}
+    server etcd{{ (loop.index - 1) }} {{ etcd_server }}:9345 check
+{% endfor -%}
 
 frontend kubernetes-api
     bind *:6443
@@ -45,8 +46,9 @@ backend rke2-control-plane
     http-check connect port 6443 ssl
     http-check send meth GET uri /livez hdr authorization "Bearer {{ haproxy_api_server_token }}"
     default-server inter 10s downinter 2m fall 2 rise 3
-    server ctl0 192.168.56.60:6443 check verify none
-    server ctl1 192.168.56.61:6443 check verify none
+{% for control_plane_server in groups['control_plane'] %}
+    server ctl{{ (loop.index - 1) }} {{ control_plane_server }}:6443 check verify none
+{% endfor -%}
 
 userlist Devsecops
     user devsecops password {{ status_page_secret }}
@@ -54,9 +56,9 @@ userlist Devsecops
 listen status-page
     bind *:9000
     stats enable
-	stats uri /report
-	stats refresh 30s
-	acl is_authenticated http_auth(Devsecops)
+    stats uri /report
+    stats refresh 30s
+    acl is_authenticated http_auth(Devsecops)
     http-request auth unless is_authenticated
     stats show-legends
     stats admin if TRUE
