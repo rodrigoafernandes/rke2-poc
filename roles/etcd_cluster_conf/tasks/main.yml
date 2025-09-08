@@ -5,20 +5,25 @@
     url: https://get.rke2.io
     dest: /tmp/install-rke2.sh
     mode: '0100'
+  when: not inventory_hostname == (groups['etcd'] | first)
 
 - name: Install RKE2
   ansible.builtin.shell: /tmp/install-rke2.sh
   environment:
     INSTALL_RKE2_TYPE: "server"
     INSTALL_RKE2_VERSION: "{{ rke2_version }}"
+  when: not inventory_hostname == (groups['etcd'] | first)
 
 - name: Enable rke2-server.service
   ansible.builtin.shell: systemctl enable rke2-server.service
+  when: not inventory_hostname == (groups['etcd'] | first)
 
 - name: Configure ETCD node
   ansible.builtin.template:
     src: config.yaml.j2
     dest: /etc/rancher/rke2/config.yaml
+  when: not inventory_hostname == (groups['etcd'] | first)
 
 - name: Enable rke-server
   ansible.builtin.shell: systemctl {{ rke2_state }} rke2-server.service
+  when: not inventory_hostname == (groups['etcd'] | first)

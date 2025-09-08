@@ -9,3 +9,6 @@ node-label:
 node-taint:
   - "dedicated={{ node_label }}:NoSchedule"
 {% endif %}
+disable:
+  - rke2-ingress-nginx
+  - rke2-metrics-server
