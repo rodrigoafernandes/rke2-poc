@@ -7,19 +7,12 @@
 
 - hosts: etcd:control_plane:worker_nodes
   become: yes
+  remote_user: rkeoci
   name: Configure K8s params
   roles:
     - k8s_params_conf
 
 - hosts: etcd
-  run_once: true
-  remote_user: rkeoci
-  become: yes
-  name: Configure ETCD-0 Node
-  roles:
-    - etcd_0_conf
-
-- hosts: etcd[1:]
   remote_user: rkeoci
   become: yes
   name: Configure ETCD Cluster
@@ -39,13 +32,6 @@
   name: Configure Worker Nodes
   roles:
     - worker_nodes_conf
-
-- hosts: worker_nodes
-  run_once: true
-  remote_user: rkeoci
-  become: yes
-  name: Configure HAProxy ServiceAccount
-  roles:
     - create_haproxy_serviceaccount_conf
 
 - hosts: haproxy_keepalived

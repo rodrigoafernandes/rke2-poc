@@ -2,14 +2,11 @@ server: https://{{ haproxy_vip }}:9345
 token: {{ rke2_join_token }}
 node-ip: {{ inventory_hostname }}
 disable-etcd: true
-cni: calico
+cni: cilium
 tls-san:
   - {{ haproxy_vip }}
 node-taint:
   - "CriticalAddonsOnly=true:NoExecute"
-disable:
-  - rke2-ingress-nginx
-  - rke2-metrics-server
 disable:
   - rke2-ingress-nginx
   - rke2-metrics-server

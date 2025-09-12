@@ -5,3 +5,4 @@ rke2-kubeconfig
 haproxy-api-server-token
 venv
 .idea
+root.txt

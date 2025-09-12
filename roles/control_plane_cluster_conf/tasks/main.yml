@@ -20,5 +20,17 @@
     src: config.yaml.j2
     dest: /etc/rancher/rke2/config.yaml
 
+- name: Create cilium dir
+  ansible.builtin.file:
+    path: /var/lib/rancher/rke2/server/manifests
+    group: root
+    owner: root
+    state: directory
+
+- name: Configure Cilium Hubble
+  ansible.builtin.copy:
+    src: rke2-cilium-config.yaml
+    dest: /var/lib/rancher/rke2/server/manifests/rke2-cilium-config.yaml
+
 - name: Enable rke-server
   ansible.builtin.shell: systemctl {{ rke2_state }} rke2-server.service

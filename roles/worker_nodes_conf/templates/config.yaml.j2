@@ -12,3 +12,7 @@ node-taint:
 disable:
   - rke2-ingress-nginx
   - rke2-metrics-server
+kubelet-arg:
+  - "--kube-reserved=cpu=100m,memory=512Mi,ephemeral-storage=512Mi"
+  - "--system-reserved=cpu=100m,memory=512Mi"
+  - "--max-pods=91"

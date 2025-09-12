@@ -28,4 +28,6 @@ infra/destroy:
 	ssh-keygen -f "/home/rodrigo/.ssh/known_hosts" -R "192.168.56.81"
 	ssh-keygen -f "/home/rodrigo/.ssh/known_hosts" -R "192.168.56.90"
 	ssh-keygen -f "/home/rodrigo/.ssh/known_hosts" -R "192.168.56.91"
+	rm -rf rke2-kubeconfig
+	rm -rf haproxy-api-server-token
 	vagrant destroy -f

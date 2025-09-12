@@ -2,20 +2,20 @@
 # tasks file for create_haproxy_serviceaccount_conf
 - name: Create Health Check ServiceAccount
   ansible.builtin.shell: /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2-kubeconfig create serviceaccount haproxy-health-check
-  when: rke2_state == "start"
+  when: rke2_state == "start" and inventory_hostname == (groups['worker_nodes'] | first)
 
 - name: Create api-server token dir
   ansible.builtin.file:
     path: /etc/haproxy-api-server-token
     state: directory
-  when: rke2_state == "start"
+  when: rke2_state == "start" and inventory_hostname == (groups['worker_nodes'] | first)
 
 - name: Create api-server token
   ansible.builtin.shell: /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2-kubeconfig create token haproxy-health-check > /etc/haproxy-api-server-token/haproxy-token --duration 630720000s
-  when: rke2_state == "start"
+  when: rke2_state == "start" and inventory_hostname == (groups['worker_nodes'] | first)
     
 - name: Fetch kubeconfig
   ansible.builtin.fetch:
     src: "/etc/haproxy-api-server-token/haproxy-token"
     dest: haproxy-api-server-token
-  when: rke2_state == "start"
+  when: rke2_state == "start" and inventory_hostname == (groups['worker_nodes'] | first)
