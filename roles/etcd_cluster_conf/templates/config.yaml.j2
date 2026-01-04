@@ -11,3 +11,7 @@ disable-scheduler: true
 token: {{ rke2_join_token }}
 node-ip: {{ inventory_hostname }}
 cni: cilium
+etcd-arg:
+  - "quota-backend-bytes={{ quota_backend_bytes }}"
+  - "auto-compaction-mode=periodic"
+  - "auto-compaction-retention={{ auto_compaction_retention }}"

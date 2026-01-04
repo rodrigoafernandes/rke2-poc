@@ -1,5 +1,4 @@
 - hosts: haproxy_keepalived
-  remote_user: rkeoci
   become: yes
   name: Configure HAProxy and Keepalived
   roles:
@@ -7,27 +6,23 @@
 
 - hosts: etcd:control_plane:worker_nodes
   become: yes
-  remote_user: rkeoci
   name: Configure K8s params
   roles:
     - k8s_params_conf
 
 - hosts: etcd
-  remote_user: rkeoci
   become: yes
   name: Configure ETCD Cluster
   roles:
     - etcd_cluster_conf
 
 - hosts: control_plane
-  remote_user: rkeoci
   become: yes
   name: Configure Control Plane Cluster
   roles:
     - control_plane_cluster_conf
 
 - hosts: worker_nodes
-  remote_user: rkeoci
   become: yes
   name: Configure Worker Nodes
   roles:
@@ -35,7 +30,6 @@
     - create_haproxy_serviceaccount_conf
 
 - hosts: haproxy_keepalived
-  remote_user: rkeoci
   become: yes
   name: Configure HAProxy Health check to k8s api-server to l7
   roles:
